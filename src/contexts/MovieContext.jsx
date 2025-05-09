@@ -64,20 +64,24 @@ export const MovieProvider = ({ children }) => {
     localStorage.setItem('favorites', JSON.stringify(updated))
   }
 
- 
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode)
+  }
+
   return (
     <MovieContext.Provider
       value={{
         movies,
         trending,
         favorites,
-        
+        darkMode,
         isLoading,
         error,
         fetchTrending,
         searchMovies,
         toggleFavorite,
-        
+        toggleDarkMode,
       }}
     >
       {children}
