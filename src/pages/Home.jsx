@@ -1,51 +1,77 @@
-import { useEffect } from 'react'
-import { Grid, Typography, Box, CircularProgress, Alert } from '@mui/material'
+import { Container, Typography, Box, Button, CircularProgress, Alert } from '@mui/material'
 import MovieCard from '../components/MovieCard'
-import SearchBar from '../components/SearchBar'
-import ThemeToggle from '../components/ThemeToggle'
-import { useMovieContext } from '../contexts/MovieContext'
+import { useMovies } from '../contexts/MovieContext'
 
 const Home = () => {
-  const { movies, trending, fetchTrending, isLoading, error } = useMovieContext()
+  const { 
+    movies, 
+    searchResults, 
+    searchQuery, 
+    loading, 
+    error, 
+    loadMoreMovies,
+    hasMorePages
+  } = useMovies()
 
-  useEffect(() => {
-    fetchTrending()
-  }, [fetchTrending])
-
-  const displayMovies = movies.length > 0 ? movies : trending
-
+  // Choose which array of movies to display
+  const displayMovies = searchQuery ? searchResults : movies
+  
   return (
-    <Box sx={{ p: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-        <ThemeToggle />
+    <Container>
+      <Box sx={{ pt: 3, pb: 2 }}>
+        <Typography 
+          variant="h4" 
+          component="h1" 
+          gutterBottom
+          sx={{ fontWeight: 600 }}
+        >
+          {searchQuery ? 'Search Results' : 'Popular Movies'}
+        </Typography>
+        
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+        
+        {displayMovies.length === 0 && !loading ? (
+          <Box sx={{ py: 5, textAlign: 'center' }}>
+            <Typography variant="h6">
+              {searchQuery 
+                ? `No results found for "${searchQuery}"`
+                : 'No movies available'
+              }
+            </Typography>
+          </Box>
+        ) : (
+          <>
+            <div className="movie-grid">
+              {displayMovies.map(movie => (
+                <MovieCard key={movie.id} movie={movie} />
+              ))}
+            </div>
+            
+            {hasMorePages && (
+              <Box sx={{ textAlign: 'center', py: 4 }}>
+                <Button 
+                  variant="contained" 
+                  color="primary" 
+                  onClick={loadMoreMovies}
+                  disabled={loading}
+                  sx={{ px: 4, py: 1 }}
+                >
+                  {loading ? (
+                    <CircularProgress size={24} color="inherit" />
+                  ) : (
+                    'Load More'
+                  )}
+                </Button>
+              </Box>
+            )}
+          </>
+        )}
       </Box>
-      
-      <SearchBar />
-      
-      {error && (
-        <Alert severity="error" sx={{ mb: 3 }}>
-          {error}
-        </Alert>
-      )}
-
-      {isLoading ? (
-        <CircularProgress sx={{ display: 'block', margin: '20px auto' }} />
-      ) : (
-        <>
-          <Typography variant="h5" gutterBottom>
-            {movies.length > 0 ? 'Search Results' : 'Trending Movies'}
-          </Typography>
-          
-          <Grid container spacing={3}>
-            {displayMovies.map((movie) => (
-              <Grid item key={movie.id} xs={12} sm={6} md={4} lg={3}>
-                <MovieCard movie={movie} />
-              </Grid>
-            ))}
-          </Grid>
-        </>
-      )}
-    </Box>
+    </Container>
   )
 }
 

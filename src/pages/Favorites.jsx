@@ -1,28 +1,65 @@
-import { Grid, Typography, Box, CircularProgress, Alert } from '@mui/material'
+import { Container, Typography, Box, Grid, Button, Alert } from '@mui/material'
+import { ArrowBack } from '@mui/icons-material'
+import { useNavigate } from 'react-router-dom'
 import MovieCard from '../components/MovieCard'
-import { useMovieContext } from '../contexts/MovieContext'
+import { useMovies } from '../contexts/MovieContext'
+import { useTheme } from '../contexts/ThemeContext'
 
 const Favorites = () => {
-  const { favorites } = useMovieContext()
-
+  const { favorites } = useMovies()
+  const { theme } = useTheme()
+  const navigate = useNavigate()
+  
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Your Favorite Movies
+    <Container sx={{ py: 4 }}>
+      <Button 
+        startIcon={<ArrowBack />} 
+        onClick={() => navigate('/')}
+        sx={{ mb: 3 }}
+      >
+        Back to Home
+      </Button>
+      
+      <Typography 
+        variant="h4" 
+        component="h1" 
+        gutterBottom
+        sx={{ fontWeight: 600 }}
+      >
+        My Favorites
       </Typography>
       
       {favorites.length === 0 ? (
-        <Alert severity="info">You haven't added any favorites yet.</Alert>
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: 'column',
+          alignItems: 'center', 
+          justifyContent: 'center',
+          py: 8
+        }}>
+          <Alert 
+            severity="info" 
+            sx={{ mb: 3, width: '100%', maxWidth: 500 }}
+          >
+            You haven't added any movies to your favorites yet.
+          </Alert>
+          
+          <Button 
+            variant="contained" 
+            color="primary"
+            onClick={() => navigate('/')}
+          >
+            Explore Movies
+          </Button>
+        </Box>
       ) : (
-        <Grid container spacing={3}>
-          {favorites.map((movie) => (
-            <Grid item key={movie.id} xs={12} sm={6} md={4} lg={3}>
-              <MovieCard movie={movie} />
-            </Grid>
+        <div className="movie-grid">
+          {favorites.map(movie => (
+            <MovieCard key={movie.id} movie={movie} />
           ))}
-        </Grid>
+        </div>
       )}
-    </Box>
+    </Container>
   )
 }
 

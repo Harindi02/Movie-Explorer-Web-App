@@ -1,35 +1,53 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { ThemeProvider, createTheme } from '@mui/material/styles'
-import { useMemo } from 'react' // Add this import
-import { useMovieContext } from './contexts/MovieContext'
+import { useState, useEffect } from 'react'
+import { Routes, Route, useLocation } from 'react-router-dom'
+import { CssBaseline, Box } from '@mui/material'
+import Navbar from './components/Navbar'
 import Home from './pages/Home'
+import MovieDetails from './pages/MovieDetails'
 import Favorites from './pages/Favorites'
 import Login from './pages/Login'
-import CssBaseline from '@mui/material/CssBaseline'
+import NotFound from './pages/NotFound'
+import { useTheme } from './contexts/ThemeContext'
+import { useAuth } from './contexts/AuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
-  const { darkMode } = useMovieContext()
+  const { theme } = useTheme()
+  const { isAuthenticated } = useAuth()
+  const location = useLocation()
   
-  // Memoize theme to prevent unnecessary recreations
-  const theme = useMemo(() => createTheme({
-    palette: {
-      mode: darkMode ? 'dark' : 'light',
-      primary: { main: '#1976d2' },
-      secondary: { main: '#dc004e' },
-    },
-  }), [darkMode]) // Only recreate when darkMode changes
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [location.pathname])
 
   return (
-    <ThemeProvider theme={theme}>
+    <Box sx={{ 
+      bgcolor: theme.palette.background.default,
+      color: theme.palette.text.primary,
+      minHeight: '100vh',
+      transition: 'background-color 0.3s ease'
+    }}>
       <CssBaseline />
-      <Router>
+      <Navbar />
+      
+      <Box component="main" sx={{ pt: { xs: 7, sm: 8 } }}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/favorites" element={<Favorites />} />
+          <Route path="/movie/:id" element={<MovieDetails />} />
+          <Route 
+            path="/favorites" 
+            element={
+              <ProtectedRoute>
+                <Favorites />
+              </ProtectedRoute>
+            } 
+          />
           <Route path="/login" element={<Login />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
-      </Router>
-    </ThemeProvider>
+      </Box>
+    </Box>
   )
 }
 
