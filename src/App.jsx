@@ -4,8 +4,8 @@ import { CssBaseline, Box } from '@mui/material'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import MovieDetails from './pages/MovieDetails'
-import Favorites from './pages/Favorites'
-import Login from './pages/Login'
+
+
 import NotFound from './pages/NotFound'
 import { useTheme } from './contexts/ThemeContext'
 import { useAuth } from './contexts/AuthContext'
