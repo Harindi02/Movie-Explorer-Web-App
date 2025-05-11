@@ -1,0 +1,7 @@
+{
+  "files": [],
+  "references": [
+    // Removed reference to missing file
+    { "path": "./tsconfig.node.json" }
+  ]
+}
