@@ -38,22 +38,7 @@ A beautiful React application to explore movies using the TMDb API. Search, disc
    npm run dev
    ```
 
-## Getting a TMDb API Key
-
-1. Create an account at [themoviedb.org](https://www.themoviedb.org/signup)
-2. Go to your account settings
-3. Click on the "API" link in the left sidebar
-4. Follow the instructions to request an API key
-
-## Deployment
-
-This project is configured for easy deployment to Vercel:
-
-1. Push your code to GitHub
-2. Connect your repository to Vercel
-3. Set up your environment variables
-4. Deploy!
-
+ 
 ## Project Structure
 
 - `src/components/`: Reusable UI components
@@ -62,10 +47,6 @@ This project is configured for easy deployment to Vercel:
 - `src/types/`: TypeScript interfaces and type definitions
 - `src/utils/`: Utility functions and API logic
 
-## License
-
-This project is licensed under the MIT License.
-
----
+ 
 
 This project uses the TMDb API but is not endorsed or certified by TMDb.
